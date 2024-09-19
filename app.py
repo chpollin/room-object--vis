@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output
 logging.basicConfig(level=logging.INFO)
 
 # Constants
-DATA_FILE_PATH = 'graph_stube_obj.json'
+DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), 'graph_stube_obj.json')
 
 def load_realonline_data(file_path: str) -> Optional[List[Dict[str, Any]]]:
     """Load and parse JSON data from the REALonline graph_stube_obj file."""
@@ -106,6 +106,7 @@ def prepare_treemap_data(data: List[Dict[str, Any]]) -> pd.DataFrame:
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
+server = app.server
 app.title = 'Room-Object Treemap Visualization'
 
 # Load data
@@ -292,10 +293,5 @@ def update_figure(selected_objects, search_query, n_clicks):
     return fig, summary, switch_button_text
 
 
-# Initialize the Dash app
-app = dash.Dash(__name__)
-server = app.server  # Add this line for Heroku deployment
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run_server(debug=False, host='0.0.0.0', port=port)
+    app.run_server(debug=False)
